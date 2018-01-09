@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>koa2 upload demo</h1>
+    <form method="POST" action="http://127.0.0.1:3000/up" enctype="multipart/form-data">
+        <p>file upload</p>
+        <span>picName:</span>
+        <input name="picName" type="text" />
+        <br/>
+        <input name="file" type="file" />
+        <br/>
+        <br/>
+        <button type="submit">submit</button>
+    </form>
+    <script src="./jquery-2.2.4.js"></script>
+    <script>
+        $('.file').change(function (event) {
+            //event.preventDefault(); //阻止默认事件
+            //event.stopPropagation(); //阻止事件冒泡
+
+            //生成一个文件对象
+            var reader = new FileReader();
+            //获取到第一个图片对象
+            var img1 = event.target.files[0];
+            //文件对象将图片转成 dataurl
+            reader.readAsDataURL(img1);
+
+            console.log('读取完成');
+            //读取完成触发这个 发送请求 将dataurl传后台
+            reader.onloadend = function () {
+                var _theData = {
+                    "dataUrl": reader.result
+                };
+                $.ajax({
+                    //后台怎么处理是他的事
+                    url: "http://127.0.0.1:3000/up",
+                    type: 'post', //GET
+                    data: _theData,
+                    //返回的数据格式：json/xml/html/script/jsonp/text
+                    //dataType: 'json', 
+                    success: function (data, textStatus, jqXHR) {
+                        console.log('成功')
+                    },
+                    error: function (xhr, textStatus) {
+                        console.log('错误')
+                    },
+                })
+            }
+
+        })
+    </script>
+
+</body>
+
+</html>
